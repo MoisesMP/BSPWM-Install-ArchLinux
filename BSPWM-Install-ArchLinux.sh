@@ -73,8 +73,8 @@ echo -e "     |$Red              \e[1;37m  Created By Moises Montaño @MoisesMP:
 sleep 0.1
 echo -e $Cyan   "    +${Yellow}-------------------------------------------------------------------------------------------${Cyan}+${Yellow}"
 sleep 0.1
-echo -e "               \e[101m\e[1;37m::    Follow me on: twitter.com/   ::\e[0m\n"
-echo -e "           \e[101m\e[1;37m| [!]  | BSPWM Installer For Arch Linux | Ver.1.0  |\e[0m\n"               
+echo -e "                                                                                                             " 
+echo -e "                     \e[101m\e[1;37m| [!]  | BSPWM Installer For Arch Linux | Ver.1.0  |\e[0m\n"               
 }
 
 function checkyay {
@@ -210,7 +210,7 @@ else
 echo [x]::[warning]:this script require Picom ;
 echo ""
 echo [!]::[please wait]: Installing Picom ..  ;
-yay -S --noconfirm picom
+sudo pacman -S picom --noconfirm 
 echo ""
 fi
 sleep 1
@@ -381,6 +381,66 @@ fi
 sleep 1
 }
 
+function checkfeh {
+    which feh > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+    echo [✔]::[Feh]: installation found!;
+else
+
+echo [x]::[warning]:this script require Feh;
+echo ""
+echo [!]::[please wait]: Installing Feh ..  ;
+sudo pacman -S feh --noconfirm
+echo ""
+fi
+sleep 1
+}
+
+function checkthunar {
+    which thunar > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+    echo [✔]::[Thunar]: installation found!;
+else
+
+echo [x]::[warning]:this script require Thunar;
+echo ""
+echo [!]::[please wait]: Installing Thunar ..  ;
+sudo pacman -S thunar --noconfirm
+echo ""
+fi
+sleep 1
+}
+
+function checkfirefox {
+    which firefox > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+    echo [✔]::[Firefox]: installation found!;
+else
+
+echo [x]::[warning]:this script require Firefox;
+echo ""
+echo [!]::[please wait]: Installing Firefox .. ;
+sudo pacman -S firefox --noconfirm
+echo ""
+fi
+sleep 1
+}
+
+function checklxappearance {
+    which lxappearance > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+    echo [✔]::[Lxappearance]: installation found!;
+else
+
+echo [x]::[warning]:this script require Lxappearance;
+echo ""
+echo [!]::[please wait]: Installing Lxappearance .. ;
+sudo pacman -S lxappearance --noconfirm
+echo ""
+fi
+sleep 1
+}
+
 function clonerepo {
 
 git clone https://github.com/MoisesMP/dotfiles.git
@@ -413,7 +473,69 @@ function compilingrepo {
 
 }
 
+function apps {
+
+    checkpicom   
+    checknitrogen
+    checkfeh
+    check-polybar
+    checkrofi
+    checknemo
+    checkthunar
+    checkchromium
+    checkfirefox
+    checktilix
+    checkgnomecontrol
+    checkblueberry
+    #checknetwork
+    checkdunst
+    checklolcat
+    lxappearance
+
+}
+
+function installnetwork {
+
+    echo
+    echo -e " Currently Installing ${b}NetworkManager${enda}"
+    echo -e "  Read more about it here: ${b}${endc}"
+    echo && echo -en " ${y}Press Enter To Continue${endc}"
+    read input
+
+    sudo pacman -S networkmanager --noconfirm
+
+    sudo systemctl enable networkmanager.service
+
+    echo -e " ${b} [Networkmanager-dmenu]${enda}"
+    echo -e "
+            S) Instalar Networkmanager-dmenu 
+            N) Exit
+            "
+
+    echo
+    echo -en " Choose An Option: "
+    read option
+    case $option in
+        s) checknetwork;;
+        S) checknetwork;;
+        n) sleep 1;;
+        N) sleep 1;;
+        *) echo " \"$option\" Is Not A Valid Option"; sleep 1; showvid ;;
+    esac
+
+    echo -e " ${b}NetworkManager${enda} Was Successfully Installed"
+    echo -en " ${y}Press Enter To Return To Menu${endc}"
+    echo
+    read input
+
+}
+
+
 function installdotfiles {
+
+
+    apps
+
 
     echo
     echo -e " Currently Installing ${b}DOTFILES${enda}"
@@ -437,15 +559,260 @@ function installdotfiles {
 
 }
 
+
+function showmpd {
+    showlogo
+    echo -e " ${b} [MPD & NCMPCPP]${enda}"
+    echo -e "
+            1) MPD For English Systems
+            2) MPD For Spanish Systems
+
+            q)    Return To Menu"
+
+    echo
+    echo -en " Choose An Option: "
+    read option
+    case $option in
+        1) installmpd-en;;
+        2) installmpd-es;;
+        q) sleep 1;;
+        *) echo " \"$option\" Is Not A Valid Option"; sleep 1; showvid ;;
+  esac
+}
+
+function installmpd {
+     which mpd > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+    echo [✔]::[Mpd]: installation found!;
+else
+
+echo [!]::[please wait]: Installing MPD .. ;
+sudo pacman -S mpd --noconfirm
+sudo pacman -S mpc --noconfirm
+echo ""
+fi
+sleep 1
+}
+
+
+function installncmpcpp {
+    which ncmpcpp > /dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+    echo [✔]::[NCMPCPP]: installation found!;
+else
+
+echo [!]::[please wait]: Installing NCMPCPP .. ;
+sudo pacman -S ncmpcpp --noconfirm
+echo ""
+fi
+sleep 1
+
+}
+
+function configmpd-en {
+     sudo rm /etc/mpd.conf
+
+        mkdir -p ~/.config/mpd
+
+        cp /usr/share/doc/mpd/mpdconf.example ~/.config/mpd/mpd.conf
+
+        sed -i 's/#music_directory/music_directory/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/music/~\/Music/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#playlist_directory/playlist_directory/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/playlists/~\/.config\/mpd\/playlists/g' ~/.config/mpd/mpd.conf
+
+
+        sed -i 's/#db_file/db_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/database/~\/.config\/mpd\/database/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#log_file/log_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/log/~\/.config\/mpd\/log/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#pid_file/pid_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/pid/~\/.config\/mpd\/pid/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#state_file/state_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/state/~\/.config\/mpd\/state/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#sticker_file/sticker_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/sticker/~\/.config\/mpd\/sticker/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#bind_to_address/bind_to_address/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#port/port/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#auto_update/auto_update/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#follow_inside_symlinks/follow_inside_symlinks/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/~\/.mpd\/socket/~\/.config\/mpd\/socket/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#filesystem_charset/filesystem_charset/g' ~/.config/mpd/mpd.conf
+
+        echo 'audio_output {
+              type  "alsa"
+              name  "mpd-alsa"
+              mixer_type "software"
+        }
+        audio_output {
+        type               "fifo"
+        name               "toggle_visualizer"
+        path               "/tmp/mpd.fifo"
+        format             "44100:16:2"
+        }' >> ~/.config/mpd/mpd.conf
+
+
+        mkdir ~/.config/mpd/playlists
+
+        mkdir ~/.ncmpcpp
+        cp /usr/share/doc/ncmpcpp/config ~/.ncmpcpp/config
+
+        sed -i 's/#mpd_host/mpd_host/g' ~/.ncmpcpp/config
+        sed -i 's/#mpd_port/mpd_port/g' ~/.ncmpcpp/config
+        sed -i 's/#mpd_music_dir = ~\/music/mpd_music_dir = ~\/Music/g' ~/.ncmpcpp/config
+
+
+        cp /usr/share/doc/ncmpcpp/bindings ~/.ncmpcpp/bindings
+}
+
+function configmpd-es {
+
+        sudo rm /etc/mpd.conf
+
+        mkdir -p ~/.config/mpd
+
+        cp /usr/share/doc/mpd/mpdconf.example ~/.config/mpd/mpd.conf
+
+        sed -i 's/#music_directory/music_directory/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/music/~\/Música/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#playlist_directory/playlist_directory/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/playlists/~\/.config\/mpd\/playlists/g' ~/.config/mpd/mpd.conf
+
+
+        sed -i 's/#db_file/db_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/database/~\/.config\/mpd\/database/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#log_file/log_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/log/~\/.config\/mpd\/log/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#pid_file/pid_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/pid/~\/.config\/mpd\/pid/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#state_file/state_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/state/~\/.config\/mpd\/state/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#sticker_file/sticker_file/g' ~/.config/mpd/mpd.conf
+        sed -i 's/~\/.mpd\/sticker/~\/.config\/mpd\/sticker/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#bind_to_address/bind_to_address/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#port/port/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#auto_update/auto_update/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#follow_inside_symlinks/follow_inside_symlinks/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/~\/.mpd\/socket/~\/.config\/mpd\/socket/g' ~/.config/mpd/mpd.conf
+
+        sed -i 's/#filesystem_charset/filesystem_charset/g' ~/.config/mpd/mpd.conf
+
+        echo 'audio_output {
+              type  "alsa"
+              name  "mpd-alsa"
+              mixer_type "software"
+        }
+        audio_output {
+        type               "fifo"
+        name               "toggle_visualizer"
+        path               "/tmp/mpd.fifo"
+        format             "44100:16:2"
+        }' >> ~/.config/mpd/mpd.conf
+
+
+        mkdir ~/.config/mpd/playlists
+
+        mkdir ~/.ncmpcpp
+        cp /usr/share/doc/ncmpcpp/config ~/.ncmpcpp/config
+
+        sed -i 's/#mpd_host/mpd_host/g' ~/.ncmpcpp/config
+        sed -i 's/#mpd_port/mpd_port/g' ~/.ncmpcpp/config
+        sed -i 's/#mpd_music_dir = ~\/music/mpd_music_dir = ~\/Música/g' ~/.ncmpcpp/config
+
+
+        cp /usr/share/doc/ncmpcpp/bindings ~/.ncmpcpp/bindings
+}
+
+function installmpd-en {
+    echo
+    echo -e " Currently Installing ${b}MPD${enda}"
+    echo -e "  Read more about it here: ${b}https://wiki.archlinux.org/index.php/Music_Player_Daemon/${endc}"
+    echo && echo -en " ${y}Press Enter To Continue${endc}"
+    read input
+
+    echo [x]::[warning]: Installing MPD;
+
+    installmpd
+
+    echo [x]::[warning]: Installing MPD;
+
+    installncmpcpp
+
+    echo ""
+    echo [!]::[please wait]: Copying Configuration;
+
+    configmpd-en
+
+    sudo systemctl enable mpd.service
+    sudo systemctl start mpd.service
+
+    echo -e " ${b}MPD${enda} Was Successfully Installed"
+    echo -en " ${y}Press Enter To Return To Menu${endc}"
+    echo
+    read input 
+
+}
+
+function installmpd-es {
+    echo
+    echo -e " Currently Installing ${b}MPD${enda}"
+    echo -e "  Read more about it here: ${b}https://wiki.archlinux.org/index.php/Music_Player_Daemon_(Español)/${endc}"
+    echo && echo -en " ${y}Press Enter To Continue${endc}"
+    read input
+
+    echo [x]::[warning]: Installing MPD;
+
+    installmpd
+
+    echo [x]::[warning]: Installing MPD;
+
+    installncmpcpp
+
+    echo ""
+    echo [!]::[please wait]: Copying Configuration;
+
+    configmpd-es
+
+    sudo systemctl enable mpd.service
+    sudo systemctl start mpd.service
+
+    echo -e " ${b}MPD${enda} Was Successfully Installed"
+    echo -en " ${y}Press Enter To Return To Menu${endc}"
+    echo
+    read input
+
+}
+
+
 checkgit
 checkyay 
 showlogo
 sleep 1
 
-function exit {
-  showlogo && echo -e " Thank You For Using ${b} BSPWM-Install-ArchLinux Script ${enda}
- For More Information please feel free to tweet me @MoisesMP :
- ${b}==>> ${bu}Twitter.com/${enda}"
+
+function exitScript {
+  showlogo && echo -e " Thank You For Using ${b} BSPWM-Install-ArchLinux Script ${enda}"
   echo
   sleep 1
   exit
@@ -458,9 +825,9 @@ showlogo
 echo -e "                                ${BCyan}[ BSPWM Installer MENU ]${enda}"
 echo -e "                               GIVE ME A TARGET
 
- [1]   BSPWM INSTALL                 
+ [1]   BSPWM INSTALL                    [4]   INSTALL MPD & NCMPCPP      
  [2]   INSTALL MY DOTFILES         
- 
+ [3]   INSTALL NETWORKMANAGER
           
  q)    Quit Script"   
         
@@ -471,8 +838,10 @@ echo -en " Select Option: "
 read option
 case $option in
 1) checkbspwm;;
-2) checkpicom && checknitrogen &&  check-polybar && checkrofi && checknemo && checkchromium && checktilix && checkgnomecontrol && checkblueberry && checknetwork && checkdunst && checklolcat && installdotfiles;;
-q) exit ;;
+2) installdotfiles;;
+3) installnetwork;;
+4) showmpd;;
+q) exitScript;;
 *) echo " \"$option\" Is Not A Valid Option"; sleep 1 ;;
 
 esac
