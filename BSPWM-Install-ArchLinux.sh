@@ -47,39 +47,38 @@ function showlogo {
   clear
 echo ""
 sleep 0.1
-echo -e $Cyan   "    +${Yellow}-------------------------------------------------------------------------------------------${Cyan}+"
+echo -e $Cyan   "    +${Yellow}------------------------------------------------------------------------------------------------${Cyan}+"
 sleep 0.1
-echo -e $Yellow   "    |                                                                                          $Yellow |"
+echo -e $Yellow   "    |                                                                                               $Yellow |"
 sleep 0.1
-echo -e "     |$Red             ████████     █████████   ██████████   ██             ██   ██       ██        $Yellow |"
+echo -e "     |$Red             ████████     █████████   ██████████   ██             ██   ██       ██             $Yellow |"
 sleep 0.1
-echo -e "     |$Red             ██     ██   ██           ██      ██   ██             ██   ██ █   █ ██        $Yellow |"   
+echo -e "     |$Red             ██     ██   ██           ██      ██   ██             ██   ██ █   █ ██             $Yellow |"   
 sleep 0.1
-echo -e "     |$Red             ██     ██   ██           ██      ██   ██             ██   ██  █ █  ██        $Yellow |"  
+echo -e "     |$Red             ██     ██   ██           ██      ██   ██             ██   ██  █ █  ██             $Yellow |"  
 sleep 0.1
-echo -e "     |$Red             █████████   █████████    ██████████    █     █       █    ██   █   ██        $Yellow |"  
+echo -e "     |$Red             █████████   █████████    ██████████    █     █       █    ██   █   ██             $Yellow |"  
 sleep 0.1
-echo -e "     |$Red             ██     ██           ██   ██             █   █  █    █     ██       ██        $Yellow |"
+echo -e "     |$Red             ██     ██           ██   ██             █   █  █    █     ██       ██             $Yellow |"
 sleep 0.1
-echo -e "     |$Red             ██     ██           ██   ██              █ █    █  █      ██       ██        $Yellow |" 
+echo -e "     |$Red             ██     ██           ██   ██              █ █    █  █      ██       ██             $Yellow |" 
 sleep 0.1     
-echo -e "     |$Red             ████████    █████████    ██               █      █        ██       ██        $Yellow |"  
+echo -e "     |$Red             ████████    █████████    ██               █      █        ██       ██             $Yellow |"  
 sleep 0.1
-echo -e "     |$Red                                                                                          $Yellow |" 
+echo -e "     |$Red                                                                                               $Yellow |" 
 sleep 0.1
-echo -e "     |$Red                                        INSTALLER                                         $Yellow |" 
+echo -e "     |$Red                                        INSTALLER                                              $Yellow |" 
 sleep 0.1
-echo -e "     |$Red              \e[1;37m  Created By Moises Montaño @MoisesMP: github.com/MoisesMP                  $Yellow |"
+echo -e "     |$Red              \e[1;37m  Created By Moises Montaño @MoisesMP: github.com/MoisesMP                       $Yellow |"
 sleep 0.1
-echo -e $Cyan   "    +${Yellow}-------------------------------------------------------------------------------------------${Cyan}+${Yellow}"
+echo -e $Cyan   "    +${Yellow}------------------------------------------------------------------------------------------------${Cyan}+${Yellow}"
 sleep 0.1
 echo -e "                                                                                                             " 
-echo -e "                     \e[101m\e[1;37m| [!]  | BSPWM Installer For Arch Linux | Ver.1.0  |\e[0m\n"               
+echo -e "                           \e[101m\e[1;37m| [!]  | BSPWM Installer For Arch Linux | Ver.1.0  |\e[0m\n"               
 }
 
-function checkyay {
-  which yay > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkyay(){
+    if pacman -Qi yay &> /dev/null; then
     echo [✔]::[Yay]: installation found!;
 else
 
@@ -92,9 +91,8 @@ fi
 sleep 1
 }
 
-function checkgit {
-    which git > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkgit(){
+    if pacman -Qi git &> /dev/null; then
     echo [✔]::[Git]: installation found!;
 else
 
@@ -107,9 +105,8 @@ fi
 sleep 1
 }
 
-function checkbspwm {
-      which bspwm > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkbspwm(){
+    if pacman -Qi bspwm &> /dev/null; then
     echo [✔]::[BSPWM]: installation found!;
     else
         installbspwm
@@ -117,47 +114,34 @@ function checkbspwm {
     sleep 1
 }
 
-function clonerepos {
 
 
-    git clone http://github.com/baskerville/bspwm.git
-    git clone http://github.com/baskerville/sxhkd.git
-
-}
-
-function installrepos {
-
-
-        cd bspwm
-
-        make & sudo make install
-
-        cd ..
-
-        cd sxhkd
-        
-        make & sudo make install
-        
-        cd ..
-
-}
-
-function copyexampleconfig {
+copyexampleconfig(){
 
         mkdir ~/.config/bspwm
         mkdir ~/.config/sxhkd
 
-        cp /bspwm/examples/bspwmrc ~/.config/bspwm/bspwmrc
-        cp /sxhkd/examples/sxhkdrc ~/.config/sxhkd/sxhkdrc
+        cp /usr/share/doc/bspwm/examples/bspwmrc ~/.config/bspwm/
+        cp /usr/share/doc/bspwm/examples/sxhkdrc ~/.config/sxhkd/
 
         chmod +x ~/.config/bspwm/bspwmrc
         chmod +x ~/.config/sxhkd/sxhkdrc
 }
 
-function installbspwm {
+checkxorg-xset(){
+    if pacman -Qi xorg-xset &> /dev/null; then
+        echo [✔]::[Xorg-Xset]: installation found!;
+    else
+        echo [!]::[please wait]: Installing Git ..  ;
+        sudo pacman -S xorg-xset --noconfirm
+        echo ""
+    fi
+sleep 1
 
-package=bspwm
-packages=bspwm sxhkd
+}
+
+installbspwm(){
+
 
     echo
     echo -e " Currently Installing ${b}BSPWM${enda}"
@@ -165,14 +149,17 @@ packages=bspwm sxhkd
     echo && echo -en " ${y}Press Enter To Continue${endc}"
     read input
 
-    echo [x]::[warning]: Cloning repositories of "$packages";
+    echo [x]::[warning]: Installing BSPWM;
 
-    clonerepos
+    sudo pacman -S bspwm --noconfirm
+    sudo pacman -S sxhkd --noconfirm
+    sudo pacman -S terminus-font --noconfirm
+    sudo pacman -S dmenu --noconfirm
+    sudo pacman -S rxvt-unicode --noconfirm
+    checkxorg-xset
+
 
     echo ""
-    echo [!]::[please wait]: Compiling and installing "$packages";
-
-    installrepos
 
     echo [!]::[please wait]: Copying example configuration;
 
@@ -186,9 +173,8 @@ packages=bspwm sxhkd
     
 }
 
-function check-polybar {
-    which polybar > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+check-polybar(){
+    if pacman -Qi polybar &> /dev/null; then
     echo [✔]::[Polybar]: installation found!;
 else
 
@@ -201,9 +187,8 @@ fi
 sleep 1
 }
 
-function checkpicom {
-    which picom > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkpicom(){
+    if pacman -Qi picom &> /dev/null; then
     echo [✔]::[Picom]: installation found!;
 else
 
@@ -216,9 +201,8 @@ fi
 sleep 1
 }
 
-function checknitrogen {
-    which picom > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checknitrogen(){
+    if pacman -Qi nitrogen &> /dev/null; then
     echo [✔]::[Nitrogen]: installation found!;
 else
 
@@ -231,9 +215,8 @@ fi
 sleep 1
 }
 
-function checkrofi {
-    which rofi > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkrofi(){
+    if pacman -Qi rofi &> /dev/null; then
     echo [✔]::[Rofi]: installation found!;
 else
 
@@ -246,9 +229,8 @@ fi
 sleep 1
 }
 
-function checknemo {
-    which nemo > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checknemo(){
+    if pacman -Qi nemo &> /dev/null; then
     echo [✔]::[Nemo]: installation found!;
 else
 
@@ -261,24 +243,22 @@ fi
 sleep 1
 }
 
-function checkchromium {
-    which chromium > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkchromium(){
+    if pacman -Qi chromium &> /dev/null; then
     echo [✔]::[Chromium]: installation found!;
 else
 
 echo [x]::[warning]:this script require Chromium ;
 echo ""
 echo [!]::[please wait]: Installing Chromium ..  ;
-sudo pacman -S Chromium --noconfirm
+sudo pacman -S chromium --noconfirm
 echo ""
 fi
 sleep 1
 }
 
-function checktilix {
-    which picom > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checktilix(){
+    if pacman -Qi tilix &> /dev/null; then
     echo [✔]::[Tilix]: installation found!;
 else
 
@@ -291,9 +271,9 @@ fi
 sleep 1
 }
 
-function checkgnomecontrol {
-    which gnome-control-center > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+
+checkgnomecontrol(){
+    if pacman -Qi gnome-control-center &> /dev/null; then
     echo [✔]::[Gnome Control Center]: installation found!;
 else
 
@@ -306,9 +286,8 @@ fi
 sleep 1
 }
 
-function checkblueberry {
-    which blueberry > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkblueberry(){
+    if pacman -Qi blueberry &> /dev/null; then
     echo [✔]::[Blueberry]: installation found!;
 else
 
@@ -321,9 +300,8 @@ fi
 sleep 1
 }
 
-function checknetwork {
-    which networkmanager-dmenu-git > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checknetwork(){
+    if pacman -Qi networkmanager-dmenu-git &> /dev/null; then
     echo [✔]::[Networkmanager-dmenu]: installation found!;
 else
 
@@ -336,9 +314,8 @@ fi
 sleep 1
 }
 
-function checkdunst {
-    which dunst > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkdunst(){
+    if pacman -Qi dunst &> /dev/null; then
     echo [✔]::[Dunst]: installation found!;
 else
 
@@ -351,9 +328,8 @@ fi
 sleep 1
 }
 
-function checklolcat {
-    which lolcat > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checklolcat(){
+    if pacman -Qi lolcat &> /dev/null; then
     echo [✔]::[Lolcat]: installation found!;
 else
 
@@ -366,9 +342,8 @@ fi
 sleep 1
 }
 
-function checklolcat {
-    which pfetch > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checklolcat(){
+    if pacman -Qi pfetch &> /dev/null; then
     echo [✔]::[Pfetch]: installation found!;
 else
 
@@ -381,9 +356,8 @@ fi
 sleep 1
 }
 
-function checkfeh {
-    which feh > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkfeh(){
+    if pacman -Qi feh &> /dev/null; then
     echo [✔]::[Feh]: installation found!;
 else
 
@@ -396,9 +370,8 @@ fi
 sleep 1
 }
 
-function checkthunar {
-    which thunar > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkthunar(){
+    if pacman -Qi thunar &> /dev/null; then
     echo [✔]::[Thunar]: installation found!;
 else
 
@@ -411,9 +384,8 @@ fi
 sleep 1
 }
 
-function checkfirefox {
-    which firefox > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checkfirefox(){
+    if pacman -Qi firefox &> /dev/null; then
     echo [✔]::[Firefox]: installation found!;
 else
 
@@ -426,9 +398,8 @@ fi
 sleep 1
 }
 
-function checklxappearance {
-    which lxappearance > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+checklxappearance(){
+    if pacman -Qi lxappearance &> /dev/null; then
     echo [✔]::[Lxappearance]: installation found!;
 else
 
@@ -441,13 +412,13 @@ fi
 sleep 1
 }
 
-function clonerepo {
+clonerepo(){
 
 git clone https://github.com/MoisesMP/dotfiles.git
 
 }
 
-function compilingrepo {
+compilingrepo(){
 
     cd dotfiles/
 
@@ -473,7 +444,7 @@ function compilingrepo {
 
 }
 
-function apps {
+apps(){
 
     checkpicom   
     checknitrogen
@@ -487,14 +458,14 @@ function apps {
     checktilix
     checkgnomecontrol
     checkblueberry
-    #checknetwork
+    checknetwork
     checkdunst
     checklolcat
     lxappearance
 
 }
 
-function installnetwork {
+installnetwork(){
 
     echo
     echo -e " Currently Installing ${b}NetworkManager${enda}"
@@ -508,7 +479,7 @@ function installnetwork {
 
     echo -e " ${b} [Networkmanager-dmenu]${enda}"
     echo -e "
-            S) Instalar Networkmanager-dmenu 
+            Y) Install Networkmanager-dmenu 
             N) Exit
             "
 
@@ -516,8 +487,8 @@ function installnetwork {
     echo -en " Choose An Option: "
     read option
     case $option in
-        s) checknetwork;;
-        S) checknetwork;;
+        y) checknetwork;;
+        Y) checknetwork;;
         n) sleep 1;;
         N) sleep 1;;
         *) echo " \"$option\" Is Not A Valid Option"; sleep 1; showvid ;;
@@ -531,7 +502,7 @@ function installnetwork {
 }
 
 
-function installdotfiles {
+installdotfiles(){
 
 
     apps
@@ -560,7 +531,7 @@ function installdotfiles {
 }
 
 
-function showmpd {
+showmpd(){
     showlogo
     echo -e " ${b} [MPD & NCMPCPP]${enda}"
     echo -e "
@@ -580,9 +551,8 @@ function showmpd {
   esac
 }
 
-function installmpd {
-     which mpd > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+installmpd(){
+    if pacman -Qi mpd &> /dev/null; then
     echo [✔]::[Mpd]: installation found!;
 else
 
@@ -595,9 +565,9 @@ sleep 1
 }
 
 
-function installncmpcpp {
-    which ncmpcpp > /dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
+installncmpcpp(){
+
+    if pacman -Qi ncmpcpp &> /dev/null; then
     echo [✔]::[NCMPCPP]: installation found!;
 else
 
@@ -609,8 +579,9 @@ sleep 1
 
 }
 
-function configmpd-en {
-     sudo rm /etc/mpd.conf
+configmpd-en(){
+
+        sudo rm /etc/mpd.conf
 
         mkdir -p ~/.config/mpd
 
@@ -676,7 +647,7 @@ function configmpd-en {
         cp /usr/share/doc/ncmpcpp/bindings ~/.ncmpcpp/bindings
 }
 
-function configmpd-es {
+configmpd-es(){
 
         sudo rm /etc/mpd.conf
 
@@ -744,7 +715,7 @@ function configmpd-es {
         cp /usr/share/doc/ncmpcpp/bindings ~/.ncmpcpp/bindings
 }
 
-function installmpd-en {
+installmpd-en(){
     echo
     echo -e " Currently Installing ${b}MPD${enda}"
     echo -e "  Read more about it here: ${b}https://wiki.archlinux.org/index.php/Music_Player_Daemon/${endc}"
@@ -774,7 +745,7 @@ function installmpd-en {
 
 }
 
-function installmpd-es {
+installmpd-es(){
     echo
     echo -e " Currently Installing ${b}MPD${enda}"
     echo -e "  Read more about it here: ${b}https://wiki.archlinux.org/index.php/Music_Player_Daemon_(Español)/${endc}"
@@ -807,12 +778,10 @@ function installmpd-es {
 
 checkgit
 checkyay 
-showlogo
-sleep 1
 
 
-function exitScript {
-  showlogo && echo -e " Thank You For Using ${b} BSPWM-Install-ArchLinux Script ${enda}"
+exitScript(){
+  showlogo && echo -e "                           Thank You For Using ${b} BSPWM-Install-ArchLinux Script ${enda}"
   echo
   sleep 1
   exit
@@ -822,19 +791,19 @@ function exitScript {
 while :
 do
 showlogo
-echo -e "                                ${BCyan}[ BSPWM Installer MENU ]${enda}"
-echo -e "                               GIVE ME A TARGET
+echo -e "                                    ${BCyan}[ BSPWM Installer MENU ]${enda}"
+echo -e "                                        GIVE ME A TARGET
 
- [1]   BSPWM INSTALL                    [4]   INSTALL MPD & NCMPCPP      
- [2]   INSTALL MY DOTFILES         
- [3]   INSTALL NETWORKMANAGER
+                       [1]   BSPWM INSTALL                    [4]   INSTALL MPD & NCMPCPP      
+                       [2]   INSTALL MY DOTFILES         
+                       [3]   INSTALL NETWORKMANAGER
           
- q)    Quit Script"   
+                       [q]    Quit Script"   
         
         
         
 echo
-echo -en " Select Option: "
+echo -en "                       Select Option: "
 read option
 case $option in
 1) checkbspwm;;
