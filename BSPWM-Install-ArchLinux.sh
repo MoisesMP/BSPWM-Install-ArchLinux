@@ -181,7 +181,7 @@ else
 echo [x]::[warning]:this script require Polybar ;
 echo ""
 echo [!]::[please wait]: Installing Polybar ..  ;
-sudo pacman -S polybar --noconfirm
+yay -S --noconfirm polybar
 echo ""
 fi
 sleep 1
@@ -422,6 +422,8 @@ compilingrepo(){
 
     cd dotfiles/
 
+    mkdir ~/.local/share/fonts
+
     cp -r fonts/* ~/.local/share/fonts
 
     fc-cache -v
@@ -461,7 +463,7 @@ apps(){
     checknetwork
     checkdunst
     checklolcat
-    lxappearance
+    checklxappearance
 
 }
 
@@ -475,7 +477,7 @@ installnetwork(){
 
     sudo pacman -S networkmanager --noconfirm
 
-    sudo systemctl enable networkmanager.service
+    sudo systemctl enable NetworkManager.service
 
     echo -e " ${b} [Networkmanager-dmenu]${enda}"
     echo -e "
@@ -581,7 +583,7 @@ sleep 1
 
 configmpd-en(){
 
-        sudo rm /etc/mpd.conf
+
 
         mkdir -p ~/.config/mpd
 
@@ -649,7 +651,6 @@ configmpd-en(){
 
 configmpd-es(){
 
-        sudo rm /etc/mpd.conf
 
         mkdir -p ~/.config/mpd
 
@@ -735,8 +736,8 @@ installmpd-en(){
 
     configmpd-en
 
+
     sudo systemctl enable mpd.service
-    sudo systemctl start mpd.service
 
     echo -e " ${b}MPD${enda} Was Successfully Installed"
     echo -en " ${y}Press Enter To Return To Menu${endc}"
@@ -766,7 +767,7 @@ installmpd-es(){
     configmpd-es
 
     sudo systemctl enable mpd.service
-    sudo systemctl start mpd.service
+    
 
     echo -e " ${b}MPD${enda} Was Successfully Installed"
     echo -en " ${y}Press Enter To Return To Menu${endc}"
