@@ -43,7 +43,7 @@ enda='\033[0m'
 spath="$( cd "$( dirname $0 )" && pwd )"
 
 
-function showlogo {
+showlogo(){
   clear
 echo ""
 sleep 0.1
@@ -51,31 +51,15 @@ echo -e $Cyan   "    +${Yellow}-------------------------------------------------
 sleep 0.1
 echo -e $Yellow   "    |                                                                                               $Yellow |"
 sleep 0.1
-echo -e "     |$Red             ████████     █████████   ██████████   ██             ██   ██       ██             $Yellow |"
+echo -e "     |$Red                                BSPWM Installer For Arch Linux                                 $Yellow |" 
 sleep 0.1
-echo -e "     |$Red             ██     ██   ██           ██      ██   ██             ██   ██ █   █ ██             $Yellow |"   
-sleep 0.1
-echo -e "     |$Red             ██     ██   ██           ██      ██   ██             ██   ██  █ █  ██             $Yellow |"  
-sleep 0.1
-echo -e "     |$Red             █████████   █████████    ██████████    █     █       █    ██   █   ██             $Yellow |"  
-sleep 0.1
-echo -e "     |$Red             ██     ██           ██   ██             █   █  █    █     ██       ██             $Yellow |"
-sleep 0.1
-echo -e "     |$Red             ██     ██           ██   ██              █ █    █  █      ██       ██             $Yellow |" 
-sleep 0.1     
-echo -e "     |$Red             ████████    █████████    ██               █      █        ██       ██             $Yellow |"  
-sleep 0.1
-echo -e "     |$Red                                                                                               $Yellow |" 
-sleep 0.1
-echo -e "     |$Red                                        INSTALLER                                              $Yellow |" 
+echo -e "     |$Red                                                                                               $Yellow |"  
 sleep 0.1
 echo -e "     |$Red              \e[1;37m  Created By Moises Montaño @MoisesMP: github.com/MoisesMP                       $Yellow |"
 sleep 0.1
-echo -e $Cyan   "    +${Yellow}------------------------------------------------------------------------------------------------${Cyan}+${Yellow}"
-sleep 0.1
-echo -e "                                                                                                             " 
-echo -e "                           \e[101m\e[1;37m| [!]  | BSPWM Installer For Arch Linux | Ver.1.0  |\e[0m\n"               
+echo -e $Cyan   "    +${Yellow}------------------------------------------------------------------------------------------------${Cyan}+${Yellow}"            
 }
+
 
 checkyay(){
     if pacman -Qi yay &> /dev/null; then
@@ -453,9 +437,9 @@ apps(){
     checkfeh
     check-polybar
     checkrofi
-    checknemo
-    checkthunar
-    checkchromium
+#    checknemo
+#    checkthunar
+#    checkchromium
     checkfirefox
     checktilix
     checkgnomecontrol
@@ -493,7 +477,7 @@ installnetwork(){
         Y) checknetwork;;
         n) sleep 1;;
         N) sleep 1;;
-        *) echo " \"$option\" Is Not A Valid Option"; sleep 1; showvid ;;
+        *) echo " \"$option\" Is Not A Valid Option"; sleep 1; installnetwork ;;
     esac
 
     echo -e " ${b}NetworkManager${enda} Was Successfully Installed"
@@ -549,41 +533,29 @@ showmpd(){
         1) installmpd-en;;
         2) installmpd-es;;
         q) sleep 1;;
-        *) echo " \"$option\" Is Not A Valid Option"; sleep 1; showvid ;;
+        *) echo " \"$option\" Is Not A Valid Option"; sleep 1; showmpd ;;
   esac
 }
 
-installmpd(){
-    if pacman -Qi mpd &> /dev/null; then
-    echo [✔]::[Mpd]: installation found!;
-else
 
-echo [!]::[please wait]: Installing MPD .. ;
-sudo pacman -S mpd --noconfirm
-sudo pacman -S mpc --noconfirm
-echo ""
-fi
-sleep 1
-}
+installmpd-en(){
+    echo
+    echo -e " Currently Installing ${b}MPD${enda}"
+    echo -e " mpd is the music player daemon
+              it will scan for music and server music to its clients"
+    echo -e "  Read more about it here: ${b}https://wiki.archlinux.org/index.php/Music_Player_Daemon/${endc}"
+    echo && echo -en " ${y}Press Enter To Continue${endc}"
+    read input
 
+      #mpd is the music player daemon
+        #it will scan for music and server music to its clients
+        #https://wiki.archlinux.org/index.php/Music_Player_Daemon
 
-installncmpcpp(){
+        sudo pacman -S mpd --noconfirm --needed
+        sudo pacman -S mpc --noconfirm --needed
 
-    if pacman -Qi ncmpcpp &> /dev/null; then
-    echo [✔]::[NCMPCPP]: installation found!;
-else
-
-echo [!]::[please wait]: Installing NCMPCPP .. ;
-sudo pacman -S ncmpcpp --noconfirm
-echo ""
-fi
-sleep 1
-
-}
-
-configmpd-en(){
-
-
+        # no double config allowed in here and in ~/.config
+        sudo rm -f /etc/mpd.conf
 
         mkdir -p ~/.config/mpd
 
@@ -638,6 +610,13 @@ configmpd-en(){
 
         mkdir ~/.config/mpd/playlists
 
+        systemctl --user enable mpd.service
+        systemctl --user start mpd.service
+
+        # more info @ https://wiki.archlinux.org/index.php/ncmpcpp
+
+        sudo pacman -S ncmpcpp --noconfirm --needed
+
         mkdir ~/.ncmpcpp
         cp /usr/share/doc/ncmpcpp/config ~/.ncmpcpp/config
 
@@ -647,10 +626,32 @@ configmpd-en(){
 
 
         cp /usr/share/doc/ncmpcpp/bindings ~/.ncmpcpp/bindings
+
+    echo -e " ${b}MPD${enda} Was Successfully Installed"
+    echo -en " ${y}Press Enter To Return To Menu${endc}"
+    echo
+    read input
+
 }
 
-configmpd-es(){
+installmpd-es(){
+    echo
+    echo -e " Currently Installing ${b}MPD${enda}"
+    echo -e " mpd is the music player daemon
+              it will scan for music and server music to its clients"
+    echo -e "  Read more about it here: ${b}https://wiki.archlinux.org/index.php/Music_Player_Daemon_(Español)/${endc}"
+    echo && echo -en " ${y}Press Enter To Continue${endc}"
+    read input
 
+    #mpd is the music player daemon
+        #it will scan for music and server music to its clients
+        #https://wiki.archlinux.org/index.php/Music_Player_Daemon
+
+        sudo pacman -S mpd --noconfirm --needed
+        sudo pacman -S mpc --noconfirm --needed
+
+        # no double config allowed in here and in ~/.config
+        sudo rm -f /etc/mpd.conf
 
         mkdir -p ~/.config/mpd
 
@@ -705,6 +706,13 @@ configmpd-es(){
 
         mkdir ~/.config/mpd/playlists
 
+        systemctl --user enable mpd.service
+        systemctl --user start mpd.service
+
+        # more info @ https://wiki.archlinux.org/index.php/ncmpcpp
+
+        sudo pacman -S ncmpcpp --noconfirm --needed
+
         mkdir ~/.ncmpcpp
         cp /usr/share/doc/ncmpcpp/config ~/.ncmpcpp/config
 
@@ -714,60 +722,6 @@ configmpd-es(){
 
 
         cp /usr/share/doc/ncmpcpp/bindings ~/.ncmpcpp/bindings
-}
-
-installmpd-en(){
-    echo
-    echo -e " Currently Installing ${b}MPD${enda}"
-    echo -e "  Read more about it here: ${b}https://wiki.archlinux.org/index.php/Music_Player_Daemon/${endc}"
-    echo && echo -en " ${y}Press Enter To Continue${endc}"
-    read input
-
-    echo [x]::[warning]: Installing MPD;
-
-    installmpd
-
-    echo [x]::[warning]: Installing MPD;
-
-    installncmpcpp
-
-    echo ""
-    echo [!]::[please wait]: Copying Configuration;
-
-    configmpd-en
-
-
-    sudo systemctl enable mpd.service
-
-    echo -e " ${b}MPD${enda} Was Successfully Installed"
-    echo -en " ${y}Press Enter To Return To Menu${endc}"
-    echo
-    read input 
-
-}
-
-installmpd-es(){
-    echo
-    echo -e " Currently Installing ${b}MPD${enda}"
-    echo -e "  Read more about it here: ${b}https://wiki.archlinux.org/index.php/Music_Player_Daemon_(Español)/${endc}"
-    echo && echo -en " ${y}Press Enter To Continue${endc}"
-    read input
-
-    echo [x]::[warning]: Installing MPD;
-
-    installmpd
-
-    echo [x]::[warning]: Installing MPD;
-
-    installncmpcpp
-
-    echo ""
-    echo [!]::[please wait]: Copying Configuration;
-
-    configmpd-es
-
-    sudo systemctl enable mpd.service
-    
 
     echo -e " ${b}MPD${enda} Was Successfully Installed"
     echo -en " ${y}Press Enter To Return To Menu${endc}"
